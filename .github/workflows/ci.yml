@@ -11,7 +11,7 @@ jobs:
       matrix:
         os: ["ubuntu-latest"]
         perl: ["5.16", "5.26", "5.32"]
-        redis: ["4", "5", "latest"]
+        redis: ["5", "latest"]
     runs-on: "${{matrix.os}}"
     steps:
       - uses: actions/checkout@v3
