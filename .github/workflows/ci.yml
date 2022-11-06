@@ -30,10 +30,9 @@ jobs:
       - name: Install dependencies
         run: |
           cpanm -n --installdeps .
-          cpanm -n EV Test::CPAN::Changes Test::Pod::Coverage Test::Pod Test::Spelling
+          cpanm -n Test::CPAN::Changes Test::Pod::Coverage Test::Pod Test::Spelling
       - name: Run tests
         run: prove -l t
         env:
           HARNESS_OPTIONS: j4
           TEST_ONLINE: "redis://localhost:${{steps.setup.outputs.redis-port}}"
-          TEST_KEA: 1
