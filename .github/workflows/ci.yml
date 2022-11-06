@@ -23,16 +23,21 @@ jobs:
       - uses: shogo82148/actions-setup-perl@v1
         with:
           perl-version: "${{matrix.perl}}"
+          install-modules-with: cpanm
+          install-modules-args: --with-develop --with-configure          
       - run: redis-cli --version
       - run: perl -V
-      - name: Fix ExtUtils::MakeMaker for Perl 5.16
-        run: cpanm -n App::cpanminus ExtUtils::MakeMaker
       - name: Install dependencies
         run: |
           cpanm -n Test::CPAN::Changes Test::Pod::Coverage Test::Pod Test::Spelling
           cpanm -n --installdeps .
-      - name: Run tests
+      - name: Run tests via TCP
         run: prove -l t/*.t
         env:
           HARNESS_OPTIONS: j4
           TEST_ONLINE: "redis://127.0.0.1:${{steps.setup.outputs.redis-port}}"
+      - name: Run tests via UNIX socket
+        run: prove -l t/*.t
+        env:
+          HARNESS_OPTIONS: j4
+          TEST_ONLINE: "${{ steps.setup.outputs.redis-unix-socket }}"
