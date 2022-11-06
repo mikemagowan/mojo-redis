@@ -20,6 +20,8 @@ jobs:
         with:
           redis-version: ${{ matrix.redis }}
           auto-start: true
+      - run: redis-cli -h 127.0.0.1 -p ${{ steps.setup.outputs.redis-port }} ping    
+      - run: redis-cli -s ${{ steps.setup.outputs.redis-unix-socket }} ping      
       - uses: shogo82148/actions-setup-perl@v1
         with:
           perl-version: "${{matrix.perl}}"
@@ -29,8 +31,8 @@ jobs:
       - run: perl -V
       - name: Install dependencies
         run: |
-          cpanm -n Test::CPAN::Changes Test::Pod::Coverage Test::Pod Test::Spelling
           cpanm -n --installdeps .
+          cpanm -n Cpanel::JSON::XS EV Test::CPAN::Changes Test::Pod::Coverage Test::Pod Test::Spelling
       - name: Run tests via TCP
         run: prove -l t/*.t
         env:
