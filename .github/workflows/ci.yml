@@ -10,8 +10,8 @@ jobs:
     strategy:
       matrix:
         os: ["ubuntu-latest"]
-        perl: ["5.32", "5.16"]
-        redis: ["5", "latest"]
+        perl: ["5.16", "5.26", "5.32"]
+        redis: ["4", "5", "latest"]
     runs-on: "${{matrix.os}}"
     steps:
       - uses: actions/checkout@v3
@@ -32,7 +32,7 @@ jobs:
           cpanm -n --installdeps .
           cpanm -n EV Test::CPAN::Changes Test::Pod::Coverage Test::Pod Test::Spelling
       - name: Run tests
-        run: prove -lv t
+        run: prove -l t
         env:
           HARNESS_OPTIONS: j4
           TEST_ONLINE: "redis://localhost:${{steps.setup.outputs.redis-port}}"
